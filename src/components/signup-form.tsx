@@ -15,6 +15,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
+import { Link } from "@tanstack/react-router";
 
 export function SignupForm({
   className,
@@ -144,9 +145,13 @@ export function SignupForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Already have an account?{" "}
-              <a href="sign-in" className="underline underline-offset-4">
+              <Link
+                className="underline underline-offset-4"
+                from="/sign-in"
+                search={(prev) => ({ ...prev, newUser: undefined })}
+              >
                 Sign in
-              </a>
+              </Link>
             </div>
           </form>
         </CardContent>

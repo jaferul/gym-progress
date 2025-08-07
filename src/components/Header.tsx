@@ -11,6 +11,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { useAuth } from "./auth-provider";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -51,6 +52,7 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 function Header() {
+  const { isAuthenticated } = useAuth();
   return (
     <NavigationMenu viewport={false}>
       <NavigationMenuList>
@@ -86,9 +88,21 @@ function Header() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link to="/sign-in">Sign in</Link>
-          </NavigationMenuLink>
+          {isAuthenticated ? (
+            <NavigationMenuLink
+              asChild
+              className={navigationMenuTriggerStyle()}
+            >
+              <Link to="/profile">Profile</Link>
+            </NavigationMenuLink>
+          ) : (
+            <NavigationMenuLink
+              asChild
+              className={navigationMenuTriggerStyle()}
+            >
+              <Link to="/sign-in">Sign in</Link>
+            </NavigationMenuLink>
+          )}
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
