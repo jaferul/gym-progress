@@ -47,10 +47,6 @@ export function SignupForm({
       .then((userCredential) => {
         // Signed up
         const user = userCredential.user;
-        console.log(
-          "Welcome to your gym-progress-app! User signed up successfully:",
-          user,
-        );
         setDoc(doc(db, "users", user.uid), {
           name: name,
           email: email,
@@ -137,7 +133,7 @@ export function SignupForm({
                   />
                 </div>
               </div>
-              {true && (
+              {error && (
                 <div className="py-2 text-center text-sm bg-[#9c2b2e] border-[#e84e4f] rounded-md">
                   {error}
                 </div>
