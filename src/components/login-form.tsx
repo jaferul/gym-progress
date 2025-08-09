@@ -27,10 +27,9 @@ export function LoginForm({
     event.preventDefault();
 
     setError("");
-    console.log("Signing in with email:", email, password);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        throw navigate({ to: "/profile" });
+        navigate({ to: "/profile" });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -65,12 +64,13 @@ export function LoginForm({
               <div className="grid gap-3">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
+                  <Link
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                    from="/sign-in"
+                    search={(prev) => ({ ...prev, resetPassword: true })}
                   >
                     Forgot your password?
-                  </a>
+                  </Link>
                 </div>
                 <Input
                   id="password"
@@ -87,9 +87,6 @@ export function LoginForm({
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full">
                   Login
-                </Button>
-                <Button variant="outline" className="w-full">
-                  Login with Google
                 </Button>
               </div>
             </div>

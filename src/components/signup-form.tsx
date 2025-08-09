@@ -11,11 +11,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { EyeIcon } from "lucide-react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from "firebase/auth";
 import { auth } from "@/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 export function SignupForm({
   className,
@@ -27,6 +32,7 @@ export function SignupForm({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loader, setLoader] = useState(false);
+  const navigate = useNavigate();
 
   const [seePasswordToggle, setSeePasswordToggle] = useState(false);
   const [seeConfirmPasswordToggle, setSeeConfirmPasswordToggle] =
@@ -52,7 +58,19 @@ export function SignupForm({
           name: name,
           email: email,
         });
-        // ...
+        updateProfile(user, {
+          displayName: name,
+        });
+        sendEmailVerification(user).then(() => {
+          toast("Verify your email", {
+            description: `A verification email has been sent to ${user.email}. Please check your inbox.`,
+            action: {
+              label: "OK",
+              onClick: () => {},
+            },
+          });
+        });
+        navigate({ to: "/profile" });
       })
       .catch((error) => {
         const errorCode = error.code;

@@ -4,6 +4,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import Header from "../components/Header";
 import { ThemeProvider } from "@/components/theme-provider";
 import type { AuthContextType } from "@/components/auth-provider";
+import { Toaster } from "sonner";
 
 export type MyRouterContext = {
   auth: AuthContextType;
@@ -14,6 +15,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       <Header />
       <Outlet />
       <TanStackRouterDevtools />
+      <Toaster />
     </ThemeProvider>
   ),
 });
