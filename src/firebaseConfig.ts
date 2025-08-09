@@ -7,12 +7,12 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCp9q6-NQK28EL9jlh4jKn0_SneHyB7wSI",
-  authDomain: "gym-progress-app-88e4e.firebaseapp.com",
-  projectId: "gym-progress-app-88e4e",
-  storageBucket: "gym-progress-app-88e4e.firebasestorage.app",
-  messagingSenderId: "582971858336",
-  appId: "1:582971858336:web:d743da093edc9ca4e358c5",
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
 };
 
 // Initialize Firebase
