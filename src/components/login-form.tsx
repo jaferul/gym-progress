@@ -29,7 +29,7 @@ export function LoginForm({
     setError("");
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        navigate({ to: "/profile" });
+        navigate({ to: "/" });
       })
       .catch((error) => {
         const errorCode = error.code;

@@ -4,7 +4,7 @@ import { SignupForm } from "@/components/signup-form";
 
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/sign-in")({
+export const Route = createFileRoute("/__layout/sign-in")({
   validateSearch: (
     search: Record<string, unknown>,
   ): { newUser?: boolean; resetPassword?: boolean } => {

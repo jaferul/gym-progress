@@ -9,86 +9,153 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SignInRouteImport } from './routes/sign-in'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as _layoutRouteImport } from './routes/__layout'
+import { Route as _layoutIndexRouteImport } from './routes/__layout/index'
+import { Route as _layoutSignInRouteImport } from './routes/__layout/sign-in'
+import { Route as _layoutProfileRouteImport } from './routes/__layout/profile'
+import { Route as _layoutAnalyticsRouteImport } from './routes/__layout/analytics'
+import { Route as _layoutAddDataRouteImport } from './routes/__layout/add-data'
 
-const SignInRoute = SignInRouteImport.update({
-  id: '/sign-in',
-  path: '/sign-in',
+const _layoutRoute = _layoutRouteImport.update({
+  id: '/__layout',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
+const _layoutIndexRoute = _layoutIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => _layoutRoute,
+} as any)
+const _layoutSignInRoute = _layoutSignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => _layoutRoute,
+} as any)
+const _layoutProfileRoute = _layoutProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => _layoutRoute,
+} as any)
+const _layoutAnalyticsRoute = _layoutAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => _layoutRoute,
+} as any)
+const _layoutAddDataRoute = _layoutAddDataRouteImport.update({
+  id: '/add-data',
+  path: '/add-data',
+  getParentRoute: () => _layoutRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/profile': typeof ProfileRoute
-  '/sign-in': typeof SignInRoute
+  '/add-data': typeof _layoutAddDataRoute
+  '/analytics': typeof _layoutAnalyticsRoute
+  '/profile': typeof _layoutProfileRoute
+  '/sign-in': typeof _layoutSignInRoute
+  '/': typeof _layoutIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/profile': typeof ProfileRoute
-  '/sign-in': typeof SignInRoute
+  '/add-data': typeof _layoutAddDataRoute
+  '/analytics': typeof _layoutAnalyticsRoute
+  '/profile': typeof _layoutProfileRoute
+  '/sign-in': typeof _layoutSignInRoute
+  '/': typeof _layoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/profile': typeof ProfileRoute
-  '/sign-in': typeof SignInRoute
+  '/__layout': typeof _layoutRouteWithChildren
+  '/__layout/add-data': typeof _layoutAddDataRoute
+  '/__layout/analytics': typeof _layoutAnalyticsRoute
+  '/__layout/profile': typeof _layoutProfileRoute
+  '/__layout/sign-in': typeof _layoutSignInRoute
+  '/__layout/': typeof _layoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/profile' | '/sign-in'
+  fullPaths: '/add-data' | '/analytics' | '/profile' | '/sign-in' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/profile' | '/sign-in'
-  id: '__root__' | '/' | '/profile' | '/sign-in'
+  to: '/add-data' | '/analytics' | '/profile' | '/sign-in' | '/'
+  id:
+    | '__root__'
+    | '/__layout'
+    | '/__layout/add-data'
+    | '/__layout/analytics'
+    | '/__layout/profile'
+    | '/__layout/sign-in'
+    | '/__layout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  ProfileRoute: typeof ProfileRoute
-  SignInRoute: typeof SignInRoute
+  _layoutRoute: typeof _layoutRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sign-in': {
-      id: '/sign-in'
-      path: '/sign-in'
-      fullPath: '/sign-in'
-      preLoaderRoute: typeof SignInRouteImport
+    '/__layout': {
+      id: '/__layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof _layoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
+    '/__layout/': {
+      id: '/__layout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof _layoutIndexRouteImport
+      parentRoute: typeof _layoutRoute
+    }
+    '/__layout/sign-in': {
+      id: '/__layout/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof _layoutSignInRouteImport
+      parentRoute: typeof _layoutRoute
+    }
+    '/__layout/profile': {
+      id: '/__layout/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof _layoutProfileRouteImport
+      parentRoute: typeof _layoutRoute
+    }
+    '/__layout/analytics': {
+      id: '/__layout/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof _layoutAnalyticsRouteImport
+      parentRoute: typeof _layoutRoute
+    }
+    '/__layout/add-data': {
+      id: '/__layout/add-data'
+      path: '/add-data'
+      fullPath: '/add-data'
+      preLoaderRoute: typeof _layoutAddDataRouteImport
+      parentRoute: typeof _layoutRoute
     }
   }
 }
 
+interface _layoutRouteChildren {
+  _layoutAddDataRoute: typeof _layoutAddDataRoute
+  _layoutAnalyticsRoute: typeof _layoutAnalyticsRoute
+  _layoutProfileRoute: typeof _layoutProfileRoute
+  _layoutSignInRoute: typeof _layoutSignInRoute
+  _layoutIndexRoute: typeof _layoutIndexRoute
+}
+
+const _layoutRouteChildren: _layoutRouteChildren = {
+  _layoutAddDataRoute: _layoutAddDataRoute,
+  _layoutAnalyticsRoute: _layoutAnalyticsRoute,
+  _layoutProfileRoute: _layoutProfileRoute,
+  _layoutSignInRoute: _layoutSignInRoute,
+  _layoutIndexRoute: _layoutIndexRoute,
+}
+
+const _layoutRouteWithChildren =
+  _layoutRoute._addFileChildren(_layoutRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  ProfileRoute: ProfileRoute,
-  SignInRoute: SignInRoute,
+  _layoutRoute: _layoutRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

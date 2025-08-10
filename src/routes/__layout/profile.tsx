@@ -18,7 +18,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { AlertCircleIcon } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/profile")({
+export const Route = createFileRoute("/__layout/profile")({
   component: RouteComponent,
   beforeLoad: ({ context }) => {
     if (!context.auth.isAuthenticated) throw redirect({ to: "/sign-in" });
