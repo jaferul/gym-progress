@@ -1,4 +1,4 @@
-import { type Icon } from "@tabler/icons-react";
+import { IconPlus, type Icon } from "@tabler/icons-react";
 
 import {
   SidebarGroup,
@@ -8,6 +8,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useNavigate } from "@tanstack/react-router";
+import { QuickAddDrawer } from "./quick-add-drawer";
 
 export function NavMain({
   items,
@@ -35,6 +36,7 @@ export function NavMain({
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
+          <QuickAddDrawer />
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

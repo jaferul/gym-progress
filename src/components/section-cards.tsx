@@ -9,32 +9,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-const data = [
-  {
-    totalCalories: 2500,
-    date: "2025-06-01",
-  },
-  {
-    totalCalories: 1900,
-    date: "2025-06-01",
-  },
-  {
-    totalCalories: 2700,
-    date: "2025-06-01",
-  },
-  {
-    totalCalories: 1800,
-    date: "2025-06-01",
-  },
-];
+import { useAuth } from "./auth-provider";
 
 export function SectionCards() {
   const goalCalories = 2000;
+  const { data } = useAuth();
 
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-      {data.map((item, index) => {
+      {data?.slice(-4)?.map((item, index) => {
         const diff = item.totalCalories - goalCalories;
         const isUp = diff > 0;
         const percentageChange = ((diff / goalCalories) * 100).toFixed(1); // One decimal
@@ -55,10 +38,10 @@ export function SectionCards() {
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
               <div className="line-clamp-1 flex gap-2 font-medium">
-                {item.date}
+                {new Date(item.date).toLocaleDateString("en-GB")}
               </div>
               <div className="text-muted-foreground">
-                Your calories are{" "}
+                You are{" "}
                 <span className="underline font-bold text-foreground">
                   {isUp ? "up" : "down"} {Math.abs(diff)}
                 </span>{" "}
