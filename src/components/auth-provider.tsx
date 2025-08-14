@@ -1,7 +1,13 @@
 import { auth, db } from "@/firebaseConfig";
 import type { DayData } from "@/types";
 import { onAuthStateChanged, type User } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+} from "firebase/firestore";
 import {
   createContext,
   useContext,
@@ -134,13 +140,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       flushSync(() => {
         setUser(user);
 
-        if (user && user.emailVerified) {
-          getDoc(doc(db, "users", user.uid)).then((docSnap) => {
-            console.log("User data:", docSnap.data());
-            setGoalCalories(docSnap.data()?.goalCalories || 0);
-          });
-        }
-
         //TODO: change logic here to account for verified
         if (!user) {
           setData(demoData);
@@ -155,6 +154,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (user && user.emailVerified) {
+      const daysCollectionRef = collection(db, "users", user.uid, "days");
+      const daysQuery = query(
+        daysCollectionRef,
+        orderBy("date", "desc"),
+        limit(90),
+      );
+
+      const unsubscribeSnapshot = onSnapshot(daysQuery, (querySnapshot) => {
+        const daysData: DayData[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.date && data.totalCalories !== undefined) {
+            daysData.push({
+              date: data.date,
+              totalCalories: data.totalCalories,
+            });
+          }
+        });
+
+        // If you want oldest first, reverse the array
+        setData(daysData.reverse());
+        setGoalCalories(demoGoalCalories);
+      });
+
+      // Cleanup the listener on unmount
+      return () => unsubscribeSnapshot();
+    }
+  }, [user]);
 
   return (
     <AuthContext.Provider

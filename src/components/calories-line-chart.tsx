@@ -30,7 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "./auth-provider";
 
 const chartConfig = {
