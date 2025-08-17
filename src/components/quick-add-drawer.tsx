@@ -13,10 +13,39 @@ import { SidebarMenuButton } from "./ui/sidebar";
 import { IconPlus } from "@tabler/icons-react";
 import { Input } from "./ui/input";
 import { useState } from "react";
+import { useAuth } from "./auth-provider";
+import { saveDayData } from "@/lib/firebaseUtils";
+import { toast } from "sonner";
 
 export const QuickAddDrawer = () => {
-  const [totalCalories, setTotalCalories] = useState<number>(0);
   const [calories, setCalories] = useState("");
+  const { goalCalories, todayCalories, user } = useAuth();
+
+  const handleAddCalories = async () => {
+    if (!user) return;
+
+    const caloriesToAdd = Number(calories);
+    const result = await saveDayData(user, {
+      date: new Date().toLocaleDateString("en-CA", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }),
+      totalCalories: caloriesToAdd + (todayCalories || 0),
+    });
+
+    if (result.success) {
+      toast("Calories added successfully!", {
+        description: `You have added ${caloriesToAdd} calories.`,
+      });
+    } else {
+      toast.error("Failed to add calories.", {
+        description: result.message,
+      });
+    }
+
+    setCalories("");
+  };
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -28,9 +57,9 @@ export const QuickAddDrawer = () => {
       <DrawerContent>
         <div className="mx-auto w-full max-w-sm">
           <DrawerHeader>
-            <DrawerTitle>Total calories today: {totalCalories}</DrawerTitle>
+            <DrawerTitle>Total calories today: {todayCalories}</DrawerTitle>
             <DrawerDescription>
-              Your daily goal is currently set at 2000 kcal.
+              Your daily goal is currently set at {goalCalories} kcal.
             </DrawerDescription>
           </DrawerHeader>
           <Input
@@ -39,14 +68,7 @@ export const QuickAddDrawer = () => {
             onChange={(e) => setCalories(e.target.value)}
           />
           <DrawerFooter>
-            <Button
-              onClick={() => {
-                setTotalCalories((prev) => prev + (Number(calories) || 0));
-                setCalories("");
-              }}
-            >
-              Add calories
-            </Button>
+            <Button onClick={handleAddCalories}>Add calories</Button>
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>
             </DrawerClose>

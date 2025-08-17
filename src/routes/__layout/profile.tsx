@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useAuth } from "@/components/auth-provider";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -11,10 +12,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { auth } from "@/firebaseConfig";
-import { sendEmailVerification, signOut } from "@firebase/auth";
+import { auth, db } from "@/firebaseConfig";
+import { sendEmailVerification, signOut, updateProfile } from "@firebase/auth";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useNavigate } from "@tanstack/react-router";
+import { doc, setDoc } from "firebase/firestore";
 import { AlertCircleIcon } from "lucide-react";
 import { toast } from "sonner";
 
@@ -27,18 +29,55 @@ export const Route = createFileRoute("/__layout/profile")({
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, goalCalories } = useAuth();
+
+  const [name, setName] = useState(user?.displayName || "");
+  const [calories, setCalories] = useState(goalCalories || "");
+
+  useEffect(() => {
+    setName(user?.displayName || "");
+    setCalories(goalCalories || "");
+  }, [user, goalCalories]);
 
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
-        // Sign-out successful.
         navigate({ to: "/sign-in" });
       })
       .catch((error) => {
-        // An error happened.
         console.error("Error signing out: " + error.message);
       });
+  };
+
+  const handleProfileUpdate = async () => {
+    try {
+      if (!user || !user.uid) {
+        throw new Error("User must be logged in to update profile.");
+      }
+
+      if (!user.emailVerified) {
+        throw new Error("Email must be verified to update profile.");
+      }
+
+      await updateProfile(user, {
+        displayName: name,
+      });
+
+      const userDocRef = doc(db, "users", user.uid);
+      await setDoc(
+        userDocRef,
+        {
+          displayName: name,
+          goalCalories: Number(calories),
+        },
+        { merge: true },
+      );
+
+      toast.success("Profile updated successfully!");
+    } catch (error: any) {
+      console.error("Error updating profile:", error);
+      toast.error(`Failed to update profile: ${error.message}`);
+    }
   };
 
   const handleEmailVerification = () => {
@@ -89,8 +128,8 @@ function RouteComponent() {
                   id="name"
                   type="text"
                   placeholder="Pick a name"
-                  value={user?.displayName || ""}
-                  readOnly
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
@@ -103,9 +142,21 @@ function RouteComponent() {
                   readOnly
                 />
               </div>
+              <div className="grid gap-2">
+                <Label htmlFor="goalCalories">Calories goal</Label>
+                <Input
+                  id="goalCalories"
+                  type="number"
+                  value={calories}
+                  onChange={(e) => setCalories(e.target.value)}
+                />
+              </div>
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-2">
+            <Button className="w-full" onClick={handleProfileUpdate}>
+              Save changes
+            </Button>
             <Button className="w-full" onClick={handleSignOut}>
               Sign out
             </Button>

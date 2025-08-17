@@ -28,7 +28,7 @@ export function SectionCards() {
       {data?.slice(-4)?.map((item, index) => {
         const diff = item.totalCalories - goalCalories;
         const isUp = diff > 0;
-        const percentageChange = ((diff / goalCalories) * 100).toFixed(1); // One decimal
+        const percentageChange = ((diff / goalCalories) * 100).toFixed(1);
 
         return (
           <Card key={index} className="@container/card">

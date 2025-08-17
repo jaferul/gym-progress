@@ -21,7 +21,6 @@ const ResetPasswordCard = () => {
 
   const handleResetPassword = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Logic to handle password reset, e.g., sending a reset email
     sendPasswordResetEmail(auth, email)
       .then(() => {
         toast("Reset password email sent", {

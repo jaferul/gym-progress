@@ -41,11 +41,9 @@ export function NavUser({
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
-        // Sign-out successful.
         navigate({ to: "/sign-in" });
       })
       .catch((error) => {
-        // An error happened.
         console.error("Error signing out: " + error.message);
       });
   };

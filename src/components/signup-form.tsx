@@ -31,6 +31,7 @@ export function SignupForm({
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [goalCalories, setGoalCalories] = useState("");
   const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
 
@@ -52,11 +53,11 @@ export function SignupForm({
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed up
         const user = userCredential.user;
         setDoc(doc(db, "users", user.uid), {
           name: name,
           email: email,
+          goalCalories: Number(goalCalories) || 0,
         });
         updateProfile(user, {
           displayName: name,
@@ -151,6 +152,15 @@ export function SignupForm({
                     }
                   />
                 </div>
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="goalCalories">Calories goal</Label>
+                <Input
+                  id="goalCalories"
+                  type="number"
+                  required
+                  onChange={(e) => setGoalCalories(e.target.value)}
+                />
               </div>
               {error && (
                 <div className="py-2 text-center text-sm bg-[#9c2b2e] border-[#e84e4f] rounded-md">

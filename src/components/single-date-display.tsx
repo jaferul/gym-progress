@@ -8,6 +8,7 @@ import type { DayData } from "@/types";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -78,45 +79,54 @@ export const SingleDateDisplay = () => {
         onSelect={setDate}
         className="rounded-lg border"
       />
-      <Card className="@container/card w-full md:w-[320px] h-[340px] justify-between">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            Day Data
-          </CardTitle>
-        </CardHeader>
-        {loading && (
+      {date ? (
+        <Card className="@container/card w-full md:w-[320px] h-[340px] justify-between">
+          <CardHeader>
+            <CardDescription>{date?.toDateString()}</CardDescription>
+
+            <CardTitle className="text-2xl font-semibold @[250px]/card:text-3xl">
+              Day Data
+            </CardTitle>
+          </CardHeader>
+
+          {loading && (
+            <CardContent>
+              <Skeleton className="h-4 mb-2" />
+              <Skeleton className="h-4" />
+            </CardContent>
+          )}
           <CardContent>
-            <Skeleton className="h-4 mb-2" />
-            <Skeleton className="h-4" />
+            <div className="grid gap-3">
+              <Label htmlFor="totalCalories">Total calories</Label>
+              <Input
+                id="totalCalories"
+                type="number"
+                required
+                value={dayData?.totalCalories ?? ""}
+                onChange={(e) => {
+                  const calories = Number(e.target.value);
+                  setDayData((prev) => ({
+                    ...(prev ?? {
+                      date: date?.toLocaleDateString("en-CA") || "",
+                      totalCalories: 0,
+                    }),
+                    totalCalories: calories,
+                  }));
+                }}
+              />
+            </div>
           </CardContent>
-        )}
-        <CardContent>
-          <div className="grid gap-3">
-            <Label htmlFor="totalCalories">Total calories</Label>
-            <Input
-              id="totalCalories"
-              type="number"
-              required
-              value={dayData?.totalCalories ?? ""}
-              onChange={(e) => {
-                const calories = Number(e.target.value);
-                setDayData((prev) => ({
-                  ...(prev ?? {
-                    date: date?.toLocaleDateString("en-CA") || "",
-                    totalCalories: 0,
-                  }),
-                  totalCalories: calories,
-                }));
-              }}
-            />
-          </div>
-        </CardContent>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <Button className="w-full" onClick={handleSave}>
-            Save
-          </Button>
-        </CardFooter>
-      </Card>
+          <CardFooter className="flex-col items-start gap-1.5 text-sm">
+            <Button className="w-full" onClick={handleSave}>
+              Save
+            </Button>
+          </CardFooter>
+        </Card>
+      ) : (
+        <Card className="w-full md:w-[320px] h-[340px] flex items-center justify-center text-muted-foreground text-sm">
+          No date selected
+        </Card>
+      )}
     </div>
   );
 };

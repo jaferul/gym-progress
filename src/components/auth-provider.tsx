@@ -7,6 +7,8 @@ import {
   orderBy,
   limit,
   onSnapshot,
+  doc,
+  where,
 } from "firebase/firestore";
 import {
   createContext,
@@ -118,6 +120,7 @@ export type AuthContextType = {
   isAuthenticated: boolean;
   data: DayData[];
   goalCalories?: number;
+  todayCalories?: number;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -126,12 +129,14 @@ export const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   data: [],
   goalCalories: 0,
+  todayCalories: 0,
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [data, setData] = useState<DayData[]>([]);
   const [goalCalories, setGoalCalories] = useState(0);
+  const [todayCalories, setTodayCalories] = useState(0);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const isAuthenticated = !!user;
 
@@ -144,9 +149,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (!user) {
           setData(demoData);
           setGoalCalories(demoGoalCalories);
+          setTodayCalories(0);
         } else {
           setData([]);
-          setGoalCalories(0);
         }
 
         setIsInitialLoading(false);
@@ -164,6 +169,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         limit(90),
       );
 
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnapshot = onSnapshot(userDocRef, (doc) => {
+        const userData = doc.data();
+        if (userData && userData.goalCalories) {
+          setGoalCalories(userData.goalCalories);
+        } else {
+          setGoalCalories(0);
+        }
+      });
+
       const unsubscribeSnapshot = onSnapshot(daysQuery, (querySnapshot) => {
         const daysData: DayData[] = [];
         querySnapshot.forEach((doc) => {
@@ -176,19 +191,54 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }
         });
 
-        // If you want oldest first, reverse the array
         setData(daysData.reverse());
-        setGoalCalories(demoGoalCalories);
       });
 
-      // Cleanup the listener on unmount
-      return () => unsubscribeSnapshot();
+      const today = new Date().toLocaleDateString("en-CA", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+      const todayQuery = query(
+        daysCollectionRef,
+        where("date", "==", today),
+        limit(1),
+      );
+
+      const unsubscribeTodaySnapshot = onSnapshot(
+        todayQuery,
+        (querySnapshot) => {
+          if (!querySnapshot.empty) {
+            const todayData = querySnapshot.docs[0].data();
+            if (todayData && todayData.totalCalories !== undefined) {
+              setTodayCalories(todayData.totalCalories);
+            } else {
+              setTodayCalories(0);
+            }
+          } else {
+            setTodayCalories(0);
+          }
+        },
+      );
+
+      return () => {
+        unsubscribeSnapshot();
+        userDocSnapshot();
+        unsubscribeTodaySnapshot();
+      };
     }
   }, [user]);
 
   return (
     <AuthContext.Provider
-      value={{ user, isInitialLoading, isAuthenticated, data, goalCalories }}
+      value={{
+        user,
+        isInitialLoading,
+        isAuthenticated,
+        data,
+        goalCalories,
+        todayCalories,
+      }}
     >
       {children}
     </AuthContext.Provider>
