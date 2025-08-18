@@ -12,10 +12,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { auth, db } from "@/firebaseConfig";
-import { sendEmailVerification, signOut, updateProfile } from "@firebase/auth";
+import { db } from "@/firebaseConfig";
+import { sendEmailVerification, updateProfile } from "@firebase/auth";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useNavigate } from "@tanstack/react-router";
 import { doc, setDoc } from "firebase/firestore";
 import { AlertCircleIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -28,7 +27,6 @@ export const Route = createFileRoute("/__layout/profile")({
 });
 
 function RouteComponent() {
-  const navigate = useNavigate();
   const { user, goalCalories } = useAuth();
 
   const [name, setName] = useState(user?.displayName || "");
@@ -38,16 +36,6 @@ function RouteComponent() {
     setName(user?.displayName || "");
     setCalories(goalCalories || "");
   }, [user, goalCalories]);
-
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        navigate({ to: "/sign-in" });
-      })
-      .catch((error) => {
-        console.error("Error signing out: " + error.message);
-      });
-  };
 
   const handleProfileUpdate = async () => {
     try {
@@ -85,7 +73,6 @@ function RouteComponent() {
       sendEmailVerification(user)
         .then(() => {
           toast("New verification email", {
-            position: "top-center",
             description: `A new verification email has been sent to ${user.email}. Please check your inbox.`,
             action: {
               label: "OK",
@@ -153,12 +140,9 @@ function RouteComponent() {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="flex-col gap-2">
+          <CardFooter>
             <Button className="w-full" onClick={handleProfileUpdate}>
               Save changes
-            </Button>
-            <Button className="w-full" onClick={handleSignOut}>
-              Sign out
             </Button>
           </CardFooter>
         </Card>

@@ -16,6 +16,7 @@ import { useState } from "react";
 import { useAuth } from "./auth-provider";
 import { saveDayData } from "@/lib/firebaseUtils";
 import { toast } from "sonner";
+import { formatDate } from "@/lib/utils";
 
 export const QuickAddDrawer = () => {
   const [calories, setCalories] = useState("");
@@ -26,11 +27,7 @@ export const QuickAddDrawer = () => {
 
     const caloriesToAdd = Number(calories);
     const result = await saveDayData(user, {
-      date: new Date().toLocaleDateString("en-CA", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      }),
+      date: formatDate(new Date()),
       totalCalories: caloriesToAdd + (todayCalories || 0),
     });
 

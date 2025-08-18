@@ -16,6 +16,7 @@ import {
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Skeleton } from "./ui/skeleton";
+import { formatDate } from "@/lib/utils";
 
 export const SingleDateDisplay = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -42,11 +43,7 @@ export const SingleDateDisplay = () => {
   }, [date, user]);
 
   const handleSave = async () => {
-    const selectedDate = date?.toLocaleDateString("en-CA", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
+    const selectedDate = formatDate(date);
 
     const result = await saveDayData(user, {
       date: selectedDate || "",
@@ -107,7 +104,7 @@ export const SingleDateDisplay = () => {
                   const calories = Number(e.target.value);
                   setDayData((prev) => ({
                     ...(prev ?? {
-                      date: date?.toLocaleDateString("en-CA") || "",
+                      date: formatDate(date),
                       totalCalories: 0,
                     }),
                     totalCalories: calories,

@@ -10,7 +10,6 @@ import {
 } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { cn } from "@/lib/utils";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
 import { toast } from "sonner";

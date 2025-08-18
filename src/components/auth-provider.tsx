@@ -1,4 +1,5 @@
 import { auth, db } from "@/firebaseConfig";
+import { formatDate } from "@/lib/utils";
 import type { DayData } from "@/types";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import {
@@ -194,11 +195,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setData(daysData.reverse());
       });
 
-      const today = new Date().toLocaleDateString("en-CA", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      });
+      const today = formatDate(new Date());
       const todayQuery = query(
         daysCollectionRef,
         where("date", "==", today),

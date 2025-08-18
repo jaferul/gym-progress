@@ -10,7 +10,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <Outlet />
-      <Toaster />
+      <Toaster position="top-center" />
     </ThemeProvider>
   ),
 });

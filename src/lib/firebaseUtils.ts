@@ -10,6 +10,7 @@ import {
 import { db } from "@/firebaseConfig";
 import type { DayData } from "@/types";
 import type { User } from "firebase/auth";
+import { formatDate } from "./utils";
 
 export const saveDayData = async (user: User | null, dayData: DayData) => {
   try {
@@ -47,24 +48,8 @@ export const getRangeDaysData = async (
     const daysRef = collection(db, "users", user.uid, "days");
     const q = query(
       daysRef,
-      where(
-        "date",
-        ">=",
-        startDate?.toLocaleDateString("en-CA", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        }),
-      ),
-      where(
-        "date",
-        "<=",
-        endDate?.toLocaleDateString("en-CA", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        }),
-      ),
+      where("date", ">=", formatDate(startDate)),
+      where("date", "<=", formatDate(endDate)),
     );
 
     const querySnapshot = await getDocs(q);
@@ -93,17 +78,7 @@ export const getDayData = async (user: User | null, date?: Date) => {
 
     if (!date) throw new Error("Date must be provided.");
 
-    const dayDocRef = doc(
-      db,
-      "users",
-      user.uid,
-      "days",
-      date.toLocaleDateString("en-CA", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      }),
-    );
+    const dayDocRef = doc(db, "users", user.uid, "days", formatDate(date));
     const dayDocSnap = await getDoc(dayDocRef);
 
     return dayDocSnap.data() as DayData;

@@ -1,5 +1,5 @@
 import { LoginForm } from "@/components/login-form";
-import ResetPasswordCard from "@/components/ResetPasswordCard";
+import ResetPasswordCard from "@/components/reset-password-card";
 import { SignupForm } from "@/components/signup-form";
 
 import { createFileRoute } from "@tanstack/react-router";
