@@ -32,7 +32,7 @@ export function SignupForm({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [goalCalories, setGoalCalories] = useState("");
-  const [loader, setLoader] = useState(false);
+  // const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
 
   const [seePasswordToggle, setSeePasswordToggle] = useState(false);
@@ -42,12 +42,12 @@ export function SignupForm({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    setLoader(true);
+    // setLoader(true);
     setError("");
 
     if (confirmPassword !== password) {
       setError("Passwords do not match");
-      setLoader(false);
+      // setLoader(false);
       return;
     }
 
@@ -81,7 +81,7 @@ export function SignupForm({
         );
       });
 
-    setLoader(false);
+    // setLoader(false);
   };
 
   return (

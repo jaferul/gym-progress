@@ -28,7 +28,7 @@ export function LoginForm({
 
     setError("");
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(() => {
         navigate({ to: "/" });
       })
       .catch((error) => {
