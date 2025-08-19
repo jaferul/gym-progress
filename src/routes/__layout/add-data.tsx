@@ -14,6 +14,9 @@ function RouteComponent() {
           <SingleDateDisplay />
         </div>
         <div className="px-4 lg:px-6">
+          <p className="text-2xl font-semibold @[250px]/card:text-3xl mb-4 max-md:text-center">
+            Select a range of dates to see your data
+          </p>
           <MultipleDatesDisplay />
         </div>
       </div>

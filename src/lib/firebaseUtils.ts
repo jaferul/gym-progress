@@ -45,6 +45,9 @@ export const getRangeDaysData = async (
   try {
     if (!user || !user.uid) throw new Error("User must be logged in.");
 
+    if (user && !user.emailVerified)
+      throw new Error("User email must be verified to get data.");
+
     const daysRef = collection(db, "users", user.uid, "days");
     const q = query(
       daysRef,
@@ -75,6 +78,9 @@ export const getRangeDaysData = async (
 export const getDayData = async (user: User | null, date?: Date) => {
   try {
     if (!user || !user.uid) throw new Error("User must be logged in.");
+
+    if (user && !user.emailVerified)
+      throw new Error("User email must be verified to get data.");
 
     if (!date) throw new Error("Date must be provided.");
 

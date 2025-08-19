@@ -99,7 +99,7 @@ export const SingleDateDisplay = () => {
                 id="totalCalories"
                 type="number"
                 required
-                value={dayData?.totalCalories ?? ""}
+                value={dayData?.totalCalories || ""}
                 onChange={(e) => {
                   const calories = Number(e.target.value);
                   setDayData((prev) => ({
