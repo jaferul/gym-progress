@@ -9,7 +9,6 @@ import { resolve } from "node:path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/gym-progress/",
   plugins: [
     tanstackRouter({ autoCodeSplitting: true }),
     viteReact(),
