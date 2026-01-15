@@ -32,6 +32,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useState } from "react";
 import { useAuth } from "./auth-provider";
+import { NoDataDisplay } from "./no-data-display";
 
 const chartConfig = {
   totalCalories: {
@@ -146,9 +147,7 @@ export function CaloriesLineChart() {
               />
             </LineChart>
           ) : (
-            <div className="flex h-full items-center justify-center text-muted-foreground">
-              No data available to display
-            </div>
+            <NoDataDisplay />
           )}
         </ChartContainer>
       </CardContent>

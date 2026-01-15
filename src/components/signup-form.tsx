@@ -124,13 +124,15 @@ export function SignupForm({
                     required
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                  <EyeIcon
-                    role="button"
-                    onClick={() => setSeePasswordToggle(!seePasswordToggle)}
-                    height={20}
-                    width={20}
-                    className="absolute top-[8px] right-[8px] cursor-pointer z-2 hover:bg-primary/40"
-                  />
+                  {password?.length > 0 && (
+                    <EyeIcon
+                      role="button"
+                      onClick={() => setSeePasswordToggle(!seePasswordToggle)}
+                      height={20}
+                      width={20}
+                      className="absolute top-[8px] right-[8px] cursor-pointer z-2 hover:bg-primary/40"
+                    />
+                  )}
                 </div>
               </div>
               <div className="grid gap-3">
@@ -142,15 +144,17 @@ export function SignupForm({
                     required
                     onChange={(e) => setConfirmPassword(e.target.value)}
                   />
-                  <EyeIcon
-                    role="button"
-                    height={20}
-                    width={20}
-                    className="absolute top-[8px] right-[8px] cursor-pointer z-2 hover:bg-primary/40"
-                    onClick={() =>
-                      setSeeConfirmPasswordToggle(!seeConfirmPasswordToggle)
-                    }
-                  />
+                  {confirmPassword?.length > 0 && (
+                    <EyeIcon
+                      role="button"
+                      height={20}
+                      width={20}
+                      className="absolute top-[8px] right-[8px] cursor-pointer z-2 hover:bg-primary/40"
+                      onClick={() =>
+                        setSeeConfirmPasswordToggle(!seeConfirmPasswordToggle)
+                      }
+                    />
+                  )}
                 </div>
               </div>
               <div className="grid gap-3">
