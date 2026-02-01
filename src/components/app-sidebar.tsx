@@ -3,6 +3,7 @@ import {
   IconDashboard,
   IconDatabase,
   IconInnerShadowTop,
+  IconBurger,
 } from "@tabler/icons-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -31,6 +32,11 @@ const data = {
       title: "See / Add Data",
       url: "/add-data",
       icon: IconDatabase,
+    },
+    {
+      title: "Custom Meals",
+      url: "/custom-meals",
+      icon: IconBurger,
     },
   ],
 };
