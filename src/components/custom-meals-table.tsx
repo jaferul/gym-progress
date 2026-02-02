@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/table";
 import type { Meal } from "@/types";
 import { useState } from "react";
-import { deleteMeal } from "@/lib/firebaseUtils";
+import { deleteMeal, updateMeal } from "@/lib/firebaseUtils";
 import { useAuth } from "./auth-provider";
 import { toast } from "sonner";
 import {
@@ -44,13 +44,25 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import { Label } from "./ui/label";
+import { Spinner } from "./ui/spinner";
 
 export function CustomMealsTable({
   meals,
   refetchMeals,
+  loading = false,
 }: {
   meals: Meal[];
   refetchMeals?: (e: (prev: boolean) => boolean) => void;
+  loading?: boolean;
 }) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -59,6 +71,10 @@ export function CustomMealsTable({
   const { user } = useAuth();
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [mealsToDelete, setMealsToDelete] = useState<string[]>([]);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [mealToEdit, setMealToEdit] = useState<Meal | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editCalories, setEditCalories] = useState("");
 
   const columns: ColumnDef<Meal>[] = [
     {
@@ -124,7 +140,12 @@ export function CustomMealsTable({
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 className="cursor-pointer"
-                onClick={() => navigator.clipboard.writeText(meal.id)}
+                onClick={() => {
+                  setMealToEdit(meal);
+                  setEditName(meal.name);
+                  setEditCalories(String(meal.calories));
+                  setEditDialogOpen(true);
+                }}
               >
                 Edit meal
               </DropdownMenuItem>
@@ -192,7 +213,55 @@ export function CustomMealsTable({
     refetchMeals && refetchMeals((prev) => !prev);
   };
 
-  console.log("Selected Meal IDs:", selectedMealIds);
+  const handleEdit = async () => {
+    if (!mealToEdit) return;
+
+    const name = editName.trim();
+    if (!name) {
+      toast.error("Error", {
+        description: "Please enter a meal name.",
+      });
+      return;
+    }
+
+    const calories = parseInt(editCalories, 10);
+    if (isNaN(calories) || calories <= 0) {
+      toast.error("Error", {
+        description: "Please enter a valid calorie amount.",
+      });
+      return;
+    }
+
+    const result = await updateMeal(user, {
+      ...mealToEdit,
+      name,
+      calories,
+    });
+
+    if (result.success) {
+      toast("Success", {
+        description: result.message,
+        action: {
+          label: "OK",
+          onClick: () => {},
+        },
+      });
+    } else {
+      toast.error("Error", {
+        description: result.message,
+        action: {
+          label: "OK",
+          onClick: () => {},
+        },
+      });
+    }
+    setEditDialogOpen(false);
+    setMealToEdit(null);
+    setEditName("");
+    setEditCalories("");
+    refetchMeals && refetchMeals((prev) => !prev);
+  };
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -252,7 +321,15 @@ export function CustomMealsTable({
             ))}
           </TableHeader>
           <TableBody className="min-h-24">
-            {table.getRowModel().rows?.length ? (
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24">
+                  <div className="flex items-center justify-center">
+                    <Spinner />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -337,6 +414,48 @@ export function CustomMealsTable({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Meal</DialogTitle>
+            <DialogDescription>
+              Update the name and calories for this meal.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                Name
+              </Label>
+              <Input
+                id="name"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="calories" className="text-right">
+                Calories
+              </Label>
+              <Input
+                id="calories"
+                type="number"
+                value={editCalories}
+                onChange={(e) => setEditCalories(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleEdit}>Save changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

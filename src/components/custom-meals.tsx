@@ -21,10 +21,13 @@ export const CustomMeals = () => {
   const { user } = useAuth();
   const [meals, setMeals] = useState<Meal[]>([]);
   const [refetchMeals, setRefetchMeals] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
     (async () => {
+      setLoading(true)
       const mealsResponse = await getMeals(user);
       setMeals(mealsResponse);
+      setLoading(false)
     })();
   }, [user, refetchMeals]);
 
@@ -90,7 +93,7 @@ export const CustomMeals = () => {
           </Button>
         </CardFooter>
       </Card>
-      <CustomMealsTable meals={meals} refetchMeals={setRefetchMeals} />
+      <CustomMealsTable loading={loading} meals={meals} refetchMeals={setRefetchMeals} />
     </div>
   );
 };
