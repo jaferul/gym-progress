@@ -373,7 +373,7 @@ export function CustomMealsTable({
               size="sm"
               variant="destructive"
             >
-              Delete meals
+              {`Delete meal(s)`}
             </Button>
           )}
           <Button
