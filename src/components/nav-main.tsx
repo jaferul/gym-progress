@@ -6,6 +6,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { useNavigate } from "@tanstack/react-router";
 import { QuickAddDrawer } from "./quick-add-drawer";
@@ -20,6 +21,12 @@ export function NavMain({
   }[];
 }) {
   const navigate = useNavigate();
+  const { setOpenMobile } = useSidebar();
+
+  const handleNavigation = (url: string) => {
+    navigate({ to: url });
+    setOpenMobile(false);
+  };
 
   return (
     <SidebarGroup>
@@ -28,7 +35,7 @@ export function NavMain({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
-                onClick={() => navigate({ to: item.url })}
+                onClick={() => handleNavigation(item.url)}
                 tooltip={item.title}
               >
                 {item.icon && <item.icon />}

@@ -21,13 +21,13 @@ export const CustomMeals = () => {
   const { user } = useAuth();
   const [meals, setMeals] = useState<Meal[]>([]);
   const [refetchMeals, setRefetchMeals] = useState<boolean>(false);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
-      setLoading(true)
+      setLoading(true);
       const mealsResponse = await getMeals(user);
       setMeals(mealsResponse);
-      setLoading(false)
+      setLoading(false);
     })();
   }, [user, refetchMeals]);
 
@@ -83,7 +83,11 @@ export const CustomMeals = () => {
               placeholder="Enter meal calories"
               required
               value={calories ?? ""}
-              onChange={(e) => setCalories(Number(e.target.value))}
+              onChange={(e) =>
+                setCalories(
+                  e.target.value === "" ? undefined : Number(e.target.value),
+                )
+              }
             />
           </div>
         </CardContent>
@@ -93,7 +97,11 @@ export const CustomMeals = () => {
           </Button>
         </CardFooter>
       </Card>
-      <CustomMealsTable loading={loading} meals={meals} refetchMeals={setRefetchMeals} />
+      <CustomMealsTable
+        loading={loading}
+        meals={meals}
+        refetchMeals={setRefetchMeals}
+      />
     </div>
   );
 };

@@ -31,7 +31,8 @@ import {
 } from "@/components/ui/table";
 import type { Meal } from "@/types";
 import { useState } from "react";
-import { deleteMeal, updateMeal } from "@/lib/firebaseUtils";
+import { deleteMeal, saveDayData, updateMeal } from "@/lib/firebaseUtils";
+import { formatDate } from "@/lib/utils";
 import { useAuth } from "./auth-provider";
 import { toast } from "sonner";
 import {
@@ -68,13 +69,30 @@ export function CustomMealsTable({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const { user } = useAuth();
+  const { user, todayCalories } = useAuth();
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [mealsToDelete, setMealsToDelete] = useState<string[]>([]);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [mealToEdit, setMealToEdit] = useState<Meal | null>(null);
   const [editName, setEditName] = useState("");
   const [editCalories, setEditCalories] = useState("");
+  const [quickAddingMealId, setQuickAddingMealId] = useState<string | null>(
+    null,
+  );
+
+  const handleQuickAddCalories = async (meal: Meal) => {
+    setQuickAddingMealId(meal.id);
+    await saveDayData(
+      user,
+      {
+        date: formatDate(new Date()),
+        totalCalories: meal.calories + (todayCalories || 0),
+      },
+      true,
+      `Added ${meal.calories} calories for today`,
+    );
+    setQuickAddingMealId(null);
+  };
 
   const columns: ColumnDef<Meal>[] = [
     {
@@ -128,6 +146,7 @@ export function CustomMealsTable({
       enableHiding: false,
       cell: ({ row }) => {
         const meal = row.original;
+        const isQuickAdding = quickAddingMealId === meal.id;
 
         return (
           <DropdownMenu>
@@ -138,6 +157,17 @@ export function CustomMealsTable({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => handleQuickAddCalories(meal)}
+                disabled={isQuickAdding}
+              >
+                {isQuickAdding ? (
+                  <Spinner className="h-4 w-4" />
+                ) : (
+                  <span>Quick add calories</span>
+                )}
+              </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => {

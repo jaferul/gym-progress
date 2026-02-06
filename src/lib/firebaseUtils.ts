@@ -12,8 +12,14 @@ import { db } from "@/firebaseConfig";
 import type { DayData, Meal, MealInput } from "@/types";
 import type { User } from "firebase/auth";
 import { formatDate } from "./utils";
+import { toast } from "sonner";
 
-export const saveDayData = async (user: User | null, dayData: DayData) => {
+export const saveDayData = async (
+  user: User | null,
+  dayData: DayData,
+  withToast: boolean = true,
+  successDescription?: string,
+) => {
   try {
     if (!user || !user.uid) {
       throw new Error("User must be logged in to save day data.");
@@ -28,9 +34,22 @@ export const saveDayData = async (user: User | null, dayData: DayData) => {
       { date: dayData.date, totalCalories: dayData.totalCalories },
       { merge: true },
     );
+
+    if (withToast) {
+      toast("Success", {
+        description: successDescription || "Day data saved successfully.",
+        action: { label: "OK", onClick: () => {} },
+      });
+    }
     return { success: true, message: "Day data saved successfully." };
   } catch (error: any) {
     console.error("Error saving day data:", error);
+    if (withToast) {
+      toast.error("Error", {
+        description: `Error saving day data: ${error.message}`,
+        action: { label: "OK", onClick: () => {} },
+      });
+    }
     return {
       success: false,
       message: `Error saving day data: ${error.message}`,

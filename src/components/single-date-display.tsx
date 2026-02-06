@@ -45,28 +45,14 @@ export const SingleDateDisplay = () => {
 
   const handleSave = async () => {
     const selectedDate = formatDate(date);
-
-    const result = await saveDayData(user, {
-      date: selectedDate || "",
-      totalCalories: dayData?.totalCalories || 0,
-    });
-
-    if (result.success)
-      toast("Success", {
-        description: result.message,
-        action: {
-          label: "OK",
-          onClick: () => {},
-        },
-      });
-    else
-      toast.error("Error", {
-        description: result.message,
-        action: {
-          label: "OK",
-          onClick: () => {},
-        },
-      });
+    await saveDayData(
+      user,
+      {
+        date: selectedDate || "",
+        totalCalories: dayData?.totalCalories || 0,
+      },
+      true,
+    );
   };
 
   return (

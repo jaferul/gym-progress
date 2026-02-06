@@ -17,7 +17,7 @@ export function SiteHeader() {
           {isAuthenticated ? "Data" : "Demo Display Data"}
         </h1>
         <div className="ml-auto flex items-center gap-2">
-          <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
+          <Button variant="ghost" asChild size="sm" className="flex">
             <a
               href="https://github.com/jaferul/gym-progress"
               rel="noopener noreferrer"
