@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { getDayData, saveDayData } from "@/lib/firebaseUtils";
 import { useAuth } from "./auth-provider";
-import { toast } from "sonner";
 import type { DayData } from "@/types";
 import {
   Card,
