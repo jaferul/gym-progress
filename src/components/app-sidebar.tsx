@@ -4,6 +4,8 @@ import {
   IconDatabase,
   IconInnerShadowTop,
   IconBurger,
+  IconBarbell,
+  IconStretching,
 } from "@tabler/icons-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -22,21 +24,43 @@ import { Button } from "./ui/button";
 import { Link, useNavigate } from "@tanstack/react-router";
 
 const data = {
-  navMain: [
+  navGroups: [
     {
-      title: "Summary",
-      url: "/",
-      icon: IconDashboard,
+      label: "Calories Tracking",
+      showQuickAdd: true,
+      items: [
+        {
+          title: "Summary",
+          url: "/",
+          icon: IconDashboard,
+        },
+        {
+          title: "See / Add Data",
+          url: "/add-data",
+          icon: IconDatabase,
+        },
+        {
+          title: "Custom Meals",
+          url: "/custom-meals",
+          icon: IconBurger,
+        },
+      ],
     },
     {
-      title: "See / Add Data",
-      url: "/add-data",
-      icon: IconDatabase,
-    },
-    {
-      title: "Custom Meals",
-      url: "/custom-meals",
-      icon: IconBurger,
+      label: "Workout Tracking",
+      comingSoon: true,
+      items: [
+        {
+          title: "Saved Exercises",
+          url: "/exercises",
+          icon: IconStretching,
+        },
+        {
+          title: "Workouts",
+          url: "/workouts",
+          icon: IconBarbell,
+        },
+      ],
     },
   ],
 };
@@ -65,7 +89,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain groups={data.navGroups} />
       </SidebarContent>
       <SidebarFooter>
         {isAuthenticated ? (
