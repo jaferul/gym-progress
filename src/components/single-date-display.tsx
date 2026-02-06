@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { getDayData, saveDayData } from "@/lib/firebaseUtils";
 import { useAuth } from "./auth-provider";
-import { toast } from "sonner";
 import type { DayData } from "@/types";
 import {
   Card,
@@ -15,8 +14,8 @@ import {
 } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Skeleton } from "./ui/skeleton";
 import { formatDate } from "@/lib/utils";
+import { Spinner } from "./ui/spinner";
 
 export const SingleDateDisplay = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -32,6 +31,7 @@ export const SingleDateDisplay = () => {
         setDayData(null);
 
         const dayData = await getDayData(user, date);
+        await new Promise((resolve) => setTimeout(resolve, 500)); // this is to avoid flickering
 
         setDayData(dayData);
       } catch (error) {
@@ -44,28 +44,14 @@ export const SingleDateDisplay = () => {
 
   const handleSave = async () => {
     const selectedDate = formatDate(date);
-
-    const result = await saveDayData(user, {
-      date: selectedDate || "",
-      totalCalories: dayData?.totalCalories || 0,
-    });
-
-    if (result.success)
-      toast("Success", {
-        description: result.message,
-        action: {
-          label: "OK",
-          onClick: () => {},
-        },
-      });
-    else
-      toast.error("Error", {
-        description: result.message,
-        action: {
-          label: "OK",
-          onClick: () => {},
-        },
-      });
+    await saveDayData(
+      user,
+      {
+        date: selectedDate || "",
+        totalCalories: dayData?.totalCalories || 0,
+      },
+      true,
+    );
   };
 
   return (
@@ -86,38 +72,40 @@ export const SingleDateDisplay = () => {
             </CardTitle>
           </CardHeader>
 
-          {loading && (
-            <CardContent>
-              <Skeleton className="h-4 mb-2" />
-              <Skeleton className="h-4" />
-            </CardContent>
-          )}
-          <CardContent>
-            <div className="grid gap-3">
-              <Label htmlFor="totalCalories">Total calories</Label>
-              <Input
-                id="totalCalories"
-                type="number"
-                required
-                value={dayData?.totalCalories || ""}
-                onChange={(e) => {
-                  const calories = Number(e.target.value);
-                  setDayData((prev) => ({
-                    ...(prev ?? {
-                      date: formatDate(date),
-                      totalCalories: 0,
-                    }),
-                    totalCalories: calories,
-                  }));
-                }}
-              />
+          {loading ? (
+            <div className="flex flex-1 items-center justify-center">
+              <Spinner />
             </div>
-          </CardContent>
-          <CardFooter className="flex-col items-start gap-1.5 text-sm">
-            <Button className="w-full" onClick={handleSave}>
-              Save
-            </Button>
-          </CardFooter>
+          ) : (
+            <>
+              <CardContent>
+                <div className="grid gap-3">
+                  <Label htmlFor="totalCalories">Total calories</Label>
+                  <Input
+                    id="totalCalories"
+                    type="number"
+                    required
+                    value={dayData?.totalCalories || ""}
+                    onChange={(e) => {
+                      const calories = Number(e.target.value);
+                      setDayData((prev) => ({
+                        ...(prev ?? {
+                          date: formatDate(date),
+                          totalCalories: 0,
+                        }),
+                        totalCalories: calories,
+                      }));
+                    }}
+                  />
+                </div>
+              </CardContent>
+              <CardFooter className="flex-col items-start gap-1.5 text-sm">
+                <Button className="w-full" onClick={handleSave}>
+                  Save
+                </Button>
+              </CardFooter>
+            </>
+          )}
         </Card>
       ) : (
         <Card className="w-full md:w-[320px] h-[340px] flex items-center justify-center text-muted-foreground text-sm">

@@ -13,6 +13,7 @@ import { Route as _layoutRouteImport } from './routes/__layout'
 import { Route as _layoutIndexRouteImport } from './routes/__layout/index'
 import { Route as _layoutSignInRouteImport } from './routes/__layout/sign-in'
 import { Route as _layoutProfileRouteImport } from './routes/__layout/profile'
+import { Route as _layoutCustomMealsRouteImport } from './routes/__layout/custom-meals'
 import { Route as _layoutAddDataRouteImport } from './routes/__layout/add-data'
 
 const _layoutRoute = _layoutRouteImport.update({
@@ -34,6 +35,11 @@ const _layoutProfileRoute = _layoutProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => _layoutRoute,
 } as any)
+const _layoutCustomMealsRoute = _layoutCustomMealsRouteImport.update({
+  id: '/custom-meals',
+  path: '/custom-meals',
+  getParentRoute: () => _layoutRoute,
+} as any)
 const _layoutAddDataRoute = _layoutAddDataRouteImport.update({
   id: '/add-data',
   path: '/add-data',
@@ -42,12 +48,14 @@ const _layoutAddDataRoute = _layoutAddDataRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/add-data': typeof _layoutAddDataRoute
+  '/custom-meals': typeof _layoutCustomMealsRoute
   '/profile': typeof _layoutProfileRoute
   '/sign-in': typeof _layoutSignInRoute
   '/': typeof _layoutIndexRoute
 }
 export interface FileRoutesByTo {
   '/add-data': typeof _layoutAddDataRoute
+  '/custom-meals': typeof _layoutCustomMealsRoute
   '/profile': typeof _layoutProfileRoute
   '/sign-in': typeof _layoutSignInRoute
   '/': typeof _layoutIndexRoute
@@ -56,19 +64,21 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/__layout': typeof _layoutRouteWithChildren
   '/__layout/add-data': typeof _layoutAddDataRoute
+  '/__layout/custom-meals': typeof _layoutCustomMealsRoute
   '/__layout/profile': typeof _layoutProfileRoute
   '/__layout/sign-in': typeof _layoutSignInRoute
   '/__layout/': typeof _layoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/add-data' | '/profile' | '/sign-in' | '/'
+  fullPaths: '/add-data' | '/custom-meals' | '/profile' | '/sign-in' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/add-data' | '/profile' | '/sign-in' | '/'
+  to: '/add-data' | '/custom-meals' | '/profile' | '/sign-in' | '/'
   id:
     | '__root__'
     | '/__layout'
     | '/__layout/add-data'
+    | '/__layout/custom-meals'
     | '/__layout/profile'
     | '/__layout/sign-in'
     | '/__layout/'
@@ -108,6 +118,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof _layoutProfileRouteImport
       parentRoute: typeof _layoutRoute
     }
+    '/__layout/custom-meals': {
+      id: '/__layout/custom-meals'
+      path: '/custom-meals'
+      fullPath: '/custom-meals'
+      preLoaderRoute: typeof _layoutCustomMealsRouteImport
+      parentRoute: typeof _layoutRoute
+    }
     '/__layout/add-data': {
       id: '/__layout/add-data'
       path: '/add-data'
@@ -120,6 +137,7 @@ declare module '@tanstack/react-router' {
 
 interface _layoutRouteChildren {
   _layoutAddDataRoute: typeof _layoutAddDataRoute
+  _layoutCustomMealsRoute: typeof _layoutCustomMealsRoute
   _layoutProfileRoute: typeof _layoutProfileRoute
   _layoutSignInRoute: typeof _layoutSignInRoute
   _layoutIndexRoute: typeof _layoutIndexRoute
@@ -127,6 +145,7 @@ interface _layoutRouteChildren {
 
 const _layoutRouteChildren: _layoutRouteChildren = {
   _layoutAddDataRoute: _layoutAddDataRoute,
+  _layoutCustomMealsRoute: _layoutCustomMealsRoute,
   _layoutProfileRoute: _layoutProfileRoute,
   _layoutSignInRoute: _layoutSignInRoute,
   _layoutIndexRoute: _layoutIndexRoute,

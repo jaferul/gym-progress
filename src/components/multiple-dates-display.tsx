@@ -34,6 +34,7 @@ export function MultipleDatesDisplay() {
           dateRange?.from,
           dateRange?.to,
         );
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
         setDayDataList(daysData);
       } catch (error) {

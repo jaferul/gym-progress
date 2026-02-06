@@ -27,15 +27,15 @@ export const Route = createFileRoute("/__layout/profile")({
 });
 
 function RouteComponent() {
-  const { user, goalCalories } = useAuth();
+  const { user, goalCalories, displayName } = useAuth();
 
-  const [name, setName] = useState(user?.displayName || "");
+  const [name, setName] = useState(displayName);
   const [calories, setCalories] = useState(goalCalories || "");
 
   useEffect(() => {
-    setName(user?.displayName || "");
+    setName(displayName);
     setCalories(goalCalories || "");
-  }, [user, goalCalories]);
+  }, [displayName, goalCalories]);
 
   const handleProfileUpdate = async () => {
     try {
@@ -127,6 +127,7 @@ function RouteComponent() {
                   placeholder="m@example.com"
                   value={user?.email || ""}
                   readOnly
+                  disabled
                 />
               </div>
               <div className="grid gap-2">

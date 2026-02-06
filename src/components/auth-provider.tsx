@@ -117,6 +117,7 @@ const demoGoalCalories = 2000;
 
 export type AuthContextType = {
   user: User | null;
+  displayName: string;
   isInitialLoading: boolean;
   isAuthenticated: boolean;
   data: DayData[];
@@ -128,6 +129,7 @@ export const AuthContext = createContext<AuthContextType>({
   user: null,
   isInitialLoading: true,
   isAuthenticated: false,
+  displayName: "",
   data: [],
   goalCalories: 0,
   todayCalories: 0,
@@ -138,6 +140,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [data, setData] = useState<DayData[]>([]);
   const [goalCalories, setGoalCalories] = useState(0);
   const [todayCalories, setTodayCalories] = useState(0);
+  const [displayName, setDisplayName] = useState("");
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const isAuthenticated = !!user;
 
@@ -145,6 +148,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       flushSync(() => {
         setUser(user);
+        setDisplayName(user?.displayName || "");
 
         //TODO: change logic here to account for verified
         if (!user) {
@@ -162,6 +166,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      const unsubscribe = onSnapshot(userDocRef, (doc) => {
+        const userData = doc.data();
+        setGoalCalories(userData?.goalCalories || 0);
+        setDisplayName(userData?.displayName || userData?.name || "");
+      });
+      return () => unsubscribe();
+    }
+  }, [user]);
+
+  useEffect(() => {
     if (user && user.emailVerified) {
       const daysCollectionRef = collection(db, "users", user.uid, "days");
       const daysQuery = query(
@@ -169,16 +185,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         orderBy("date", "desc"),
         limit(90),
       );
-
-      const userDocRef = doc(db, "users", user.uid);
-      const userDocSnapshot = onSnapshot(userDocRef, (doc) => {
-        const userData = doc.data();
-        if (userData && userData.goalCalories) {
-          setGoalCalories(userData.goalCalories);
-        } else {
-          setGoalCalories(0);
-        }
-      });
 
       const unsubscribeSnapshot = onSnapshot(daysQuery, (querySnapshot) => {
         const daysData: DayData[] = [];
@@ -220,7 +226,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       return () => {
         unsubscribeSnapshot();
-        userDocSnapshot();
         unsubscribeTodaySnapshot();
       };
     }
@@ -230,6 +235,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
+        displayName,
         isInitialLoading,
         isAuthenticated,
         data,

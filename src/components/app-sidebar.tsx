@@ -3,6 +3,9 @@ import {
   IconDashboard,
   IconDatabase,
   IconInnerShadowTop,
+  IconBurger,
+  IconBarbell,
+  IconStretching,
 } from "@tabler/icons-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -19,24 +22,52 @@ import {
 import { useAuth } from "./auth-provider";
 import { Button } from "./ui/button";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { Badge } from "./ui/badge";
 
 const data = {
-  navMain: [
+  navGroups: [
     {
-      title: "Summary",
-      url: "/",
-      icon: IconDashboard,
+      label: "Calories Tracking",
+      showQuickAdd: true,
+      items: [
+        {
+          title: "Summary",
+          url: "/",
+          icon: IconDashboard,
+        },
+        {
+          title: "See / Add Data",
+          url: "/add-data",
+          icon: IconDatabase,
+        },
+        {
+          title: "Custom Meals",
+          url: "/custom-meals",
+          icon: IconBurger,
+        },
+      ],
     },
     {
-      title: "See / Add Data",
-      url: "/add-data",
-      icon: IconDatabase,
+      label: "Workout Tracking",
+      comingSoon: true,
+      items: [
+        {
+          title: "Saved Exercises",
+          url: "/exercises",
+          icon: IconStretching,
+        },
+        {
+          title: "Workouts",
+          url: "/workouts",
+          icon: IconBarbell,
+        },
+      ],
     },
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, displayName } = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -53,19 +84,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <span className="text-base font-semibold">
                   Your gym progress
                 </span>
+                {!isAuthenticated && (
+                  <Badge className="bg-amber-500/15 font-bold uppercase text-amber-600 dark:text-amber-400">
+                    Demo
+                  </Badge>
+                )}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain groups={data.navGroups} />
       </SidebarContent>
       <SidebarFooter>
         {isAuthenticated ? (
           <NavUser
             user={{
-              name: user?.displayName || "",
+              name: displayName,
               email: user?.email || "",
               avatar: "https://github.com/shadcn.png",
             }}
