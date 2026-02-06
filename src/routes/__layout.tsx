@@ -3,6 +3,7 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SiteHeader } from "@/components/site-header";
+import { DemoBanner } from "@/components/demo-banner";
 
 export const Route = createFileRoute("/__layout")({
   component: Layout,
@@ -21,6 +22,7 @@ function Layout() {
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
+        <DemoBanner />
         <div className="flex flex-1 flex-col">
           <Outlet />
         </div>

@@ -33,6 +33,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useState } from "react";
 import { useAuth } from "./auth-provider";
 import { NoDataDisplay } from "./no-data-display";
+import { Badge } from "./ui/badge";
 
 const chartConfig = {
   totalCalories: {
@@ -43,18 +44,32 @@ const chartConfig = {
 
 export function CaloriesLineChart() {
   const [timeRange, setTimeRange] = useState("90");
-  const { data, goalCalories } = useAuth();
+  const { data, goalCalories, isAuthenticated } = useAuth();
 
   const chartData = data.slice(-Number(timeRange));
 
   return (
-    <Card className="@container/card">
+    <Card
+      className={`@container/card ${!isAuthenticated ? "border-dashed border-amber-300/50 dark:border-amber-500/20" : ""}`}
+    >
       <CardHeader>
-        <CardTitle>Total Calories</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          Total Calories
+          {!isAuthenticated && (
+            <Badge className="hidden @[540px]/card:inline-flex bg-amber-500/15 font-bold uppercase text-amber-600 dark:text-amber-400">
+              Sample data
+            </Badge>
+          )}
+        </CardTitle>
         <CardDescription>
           <span className="hidden @[540px]/card:block">
             Calories compared to your goal
           </span>
+          {!isAuthenticated && (
+            <Badge className="@[540px]/card:hidden bg-amber-500/15 font-bold uppercase text-amber-600 dark:text-amber-400">
+              Sample data
+            </Badge>
+          )}
         </CardDescription>
         <CardAction>
           <ToggleGroup

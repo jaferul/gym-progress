@@ -22,6 +22,7 @@ import {
 import { useAuth } from "./auth-provider";
 import { Button } from "./ui/button";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { Badge } from "./ui/badge";
 
 const data = {
   navGroups: [
@@ -83,6 +84,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <span className="text-base font-semibold">
                   Your gym progress
                 </span>
+                {!isAuthenticated && (
+                  <Badge className="bg-amber-500/15 font-bold uppercase text-amber-600 dark:text-amber-400">
+                    Demo
+                  </Badge>
+                )}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

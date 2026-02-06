@@ -13,7 +13,7 @@ import { useAuth } from "./auth-provider";
 
 export function SectionCards() {
   const goalCalories = 2000;
-  const { data } = useAuth();
+  const { data, isAuthenticated } = useAuth();
 
   if (!data || data.length === 0) {
     return (
@@ -31,9 +31,19 @@ export function SectionCards() {
         const percentageChange = ((diff / goalCalories) * 100).toFixed(1);
 
         return (
-          <Card key={index} className="@container/card">
+          <Card
+            key={index}
+            className={`@container/card relative ${!isAuthenticated ? "border-dashed border-amber-300/50 dark:border-amber-500/20" : ""}`}
+          >
             <CardHeader>
-              <CardDescription>Total Calories</CardDescription>
+              <CardDescription className="flex items-center gap-2">
+                Total Calories
+                {!isAuthenticated && (
+                  <Badge className="bg-amber-500/15 text-[10px] font-bold uppercase text-amber-600 dark:text-amber-400">
+                    Sample
+                  </Badge>
+                )}
+              </CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 {item.totalCalories}
               </CardTitle>
