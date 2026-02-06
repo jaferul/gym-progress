@@ -67,7 +67,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, displayName } = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -101,7 +101,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {isAuthenticated ? (
           <NavUser
             user={{
-              name: user?.displayName || "",
+              name: displayName,
               email: user?.email || "",
               avatar: "https://github.com/shadcn.png",
             }}
