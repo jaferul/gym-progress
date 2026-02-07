@@ -96,11 +96,11 @@ export function DemoBanner() {
           <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-amber-500/15 dark:bg-amber-400/15">
             <IconFlask className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
           </div>
-          <p className="text-sm text-amber-800 dark:text-amber-200 truncate">
+          <p className="text-sm text-amber-800 dark:text-amber-200">
             <span className="font-semibold">Demo mode</span>
-            <span className="hidden sm:inline">
-              {" "}
-              — You're viewing sample data. Sign in to start tracking your own
+            <span className="block text-xs sm:text-sm sm:inline">
+              <span className="hidden sm:inline"> — </span>
+              You're viewing sample data. Sign in to start tracking your own
               progress.
             </span>
           </p>

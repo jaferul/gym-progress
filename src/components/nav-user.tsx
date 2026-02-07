@@ -34,7 +34,7 @@ export function NavUser({
   };
 }) {
   const navigate = useNavigate();
-  const { isMobile } = useSidebar();
+  const { isMobile, setOpenMobile } = useSidebar();
 
   const handleSignOut = () => {
     signOut(auth)
@@ -89,7 +89,12 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => navigate({ to: "/profile" })}>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate({ to: "/profile" });
+                  setOpenMobile(false);
+                }}
+              >
                 <IconUserCircle />
                 Profile
               </DropdownMenuItem>
