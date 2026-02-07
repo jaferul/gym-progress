@@ -118,6 +118,7 @@ const demoGoalCalories = 2000;
 export type AuthContextType = {
   user: User | null;
   displayName: string;
+  avatarId: string;
   isInitialLoading: boolean;
   isAuthenticated: boolean;
   data: DayData[];
@@ -130,6 +131,7 @@ export const AuthContext = createContext<AuthContextType>({
   isInitialLoading: true,
   isAuthenticated: false,
   displayName: "",
+  avatarId: "",
   data: [],
   goalCalories: 0,
   todayCalories: 0,
@@ -141,6 +143,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [goalCalories, setGoalCalories] = useState(0);
   const [todayCalories, setTodayCalories] = useState(0);
   const [displayName, setDisplayName] = useState("");
+  const [avatarId, setAvatarId] = useState("");
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const isAuthenticated = !!user;
 
@@ -172,6 +175,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const userData = doc.data();
         setGoalCalories(userData?.goalCalories || 0);
         setDisplayName(userData?.displayName || userData?.name || "");
+        setAvatarId(userData?.avatarId || "");
       });
       return () => unsubscribe();
     }
@@ -236,6 +240,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user,
         displayName,
+        avatarId,
         isInitialLoading,
         isAuthenticated,
         data,

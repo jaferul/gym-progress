@@ -10,6 +10,7 @@ import {
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
+import { getAvatarById } from "@/lib/avatars";
 import {
   Sidebar,
   SidebarContent,
@@ -67,7 +68,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { isAuthenticated, user, displayName } = useAuth();
+  const { isAuthenticated, user, displayName, avatarId } = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -103,7 +104,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             user={{
               name: displayName,
               email: user?.email || "",
-              avatar: "https://github.com/shadcn.png",
+              avatarIcon: getAvatarById(avatarId)?.icon ?? null,
             }}
           />
         ) : (
