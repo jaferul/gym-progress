@@ -126,7 +126,10 @@ export const QuickAddDrawer = () => {
       </Drawer>
 
       <Dialog open={customMealsOpen} onOpenChange={setCustomMealsOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          className="max-w-md"
+        >
           <DialogHeader>
             <DialogTitle>Add from custom meals</DialogTitle>
           </DialogHeader>
