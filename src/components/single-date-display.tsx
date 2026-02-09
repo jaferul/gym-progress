@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { getDayData, saveDayData } from "@/lib/firebaseUtils";
 import { useAuth } from "./auth-provider";
-import type { DayData } from "@/types";
+import type { DayData, Meal } from "@/types";
 import {
   Card,
   CardContent,
@@ -16,11 +16,13 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { formatDate } from "@/lib/utils";
 import { Spinner } from "./ui/spinner";
+import { CustomMealsDialog } from "./custom-meals-dialog";
 
 export const SingleDateDisplay = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [dayData, setDayData] = useState<DayData | null | undefined>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [customMealsOpen, setCustomMealsOpen] = useState(false);
 
   const { user } = useAuth();
 
@@ -42,6 +44,25 @@ export const SingleDateDisplay = () => {
     })();
   }, [date, user]);
 
+  const handleAddMealCalories = async (meal: Meal) => {
+    if (!user || !date) return;
+
+    const newCalories = (dayData?.totalCalories || 0) + meal.calories;
+    await saveDayData(
+      user,
+      {
+        date: formatDate(date) || "",
+        totalCalories: newCalories,
+      },
+      true,
+    );
+
+    setDayData((prev) => ({
+      ...(prev ?? { date: formatDate(date), totalCalories: 0 }),
+      totalCalories: newCalories,
+    }));
+  };
+
   const handleSave = async () => {
     const selectedDate = formatDate(date);
     await saveDayData(
@@ -55,6 +76,7 @@ export const SingleDateDisplay = () => {
   };
 
   return (
+    <>
     <div className="flex flex-col gap-4 md:flex-row items-center">
       <Calendar
         mode="single"
@@ -103,6 +125,13 @@ export const SingleDateDisplay = () => {
                 <Button className="w-full" onClick={handleSave}>
                   Save
                 </Button>
+                <Button
+                  className="w-full"
+                  variant="secondary"
+                  onClick={() => setCustomMealsOpen(true)}
+                >
+                  Add from custom meals
+                </Button>
               </CardFooter>
             </>
           )}
@@ -113,5 +142,12 @@ export const SingleDateDisplay = () => {
         </Card>
       )}
     </div>
+
+    <CustomMealsDialog
+      open={customMealsOpen}
+      onOpenChange={setCustomMealsOpen}
+      onAddMeal={handleAddMealCalories}
+    />
+    </>
   );
 };
