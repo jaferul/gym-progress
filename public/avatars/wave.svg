@@ -1,0 +1,47 @@
+<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="60" cy="60" r="60" fill="#0C1222" />
+  <circle cx="60" cy="60" r="56" fill="url(#wave-bg)" />
+  <path
+    d="M28 58C28 58 36 48 44 48C52 48 52 58 60 58C68 58 68 48 76 48C84 48 92 58 92 58"
+    stroke="url(#wave-line1)"
+    stroke-width="4"
+    stroke-linecap="round"
+    fill="none"
+  />
+  <path
+    d="M28 70C28 70 36 60 44 60C52 60 52 70 60 70C68 70 68 60 76 60C84 60 92 70 92 70"
+    stroke="url(#wave-line2)"
+    stroke-width="3.5"
+    stroke-linecap="round"
+    fill="none"
+    opacity="0.7"
+  />
+  <path
+    d="M28 82C28 82 36 72 44 72C52 72 52 82 60 82C68 82 68 72 76 72C84 72 92 82 92 82"
+    stroke="url(#wave-line3)"
+    stroke-width="3"
+    stroke-linecap="round"
+    fill="none"
+    opacity="0.4"
+  />
+  <circle cx="60" cy="38" r="6" fill="#67E8F9" opacity="0.3" />
+  <circle cx="60" cy="38" r="3" fill="#CFFAFE" opacity="0.5" />
+  <defs>
+    <radialGradient id="wave-bg" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#164E63" />
+      <stop offset="100%" stop-color="#0C1222" />
+    </radialGradient>
+    <linearGradient id="wave-line1" x1="28" y1="53" x2="92" y2="53">
+      <stop offset="0%" stop-color="#22D3EE" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+    <linearGradient id="wave-line2" x1="28" y1="65" x2="92" y2="65">
+      <stop offset="0%" stop-color="#67E8F9" />
+      <stop offset="100%" stop-color="#22D3EE" />
+    </linearGradient>
+    <linearGradient id="wave-line3" x1="28" y1="77" x2="92" y2="77">
+      <stop offset="0%" stop-color="#A5F3FC" />
+      <stop offset="100%" stop-color="#67E8F9" />
+    </linearGradient>
+  </defs>
+</svg>

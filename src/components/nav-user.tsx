@@ -21,8 +21,8 @@ import {
 } from "@/components/ui/sidebar";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "@tanstack/react-router";
-import type { ReactNode } from "react";
 
 export function NavUser({
   user,
@@ -30,7 +30,7 @@ export function NavUser({
   user: {
     name: string;
     email: string;
-    avatarIcon: ReactNode;
+    avatarSrc: string | null;
   };
 }) {
   const navigate = useNavigate();
@@ -53,10 +53,13 @@ export function NavUser({
     .slice(0, 2)
     .toUpperCase();
 
-  const avatarContent = user.avatarIcon ?? (
-    <div className="w-full h-full bg-muted flex items-center justify-center text-xs font-medium text-muted-foreground">
-      {initials || "?"}
-    </div>
+  const avatarContent = (
+    <Avatar key={user.avatarSrc || "none"} className="size-8 rounded-lg">
+      {user.avatarSrc && <AvatarImage src={user.avatarSrc} alt={user.name} />}
+      <AvatarFallback className="rounded-lg text-xs font-medium">
+        {initials || "?"}
+      </AvatarFallback>
+    </Avatar>
   );
 
   return (
@@ -68,9 +71,7 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="h-8 w-8 shrink-0 rounded-lg overflow-hidden">
-                {avatarContent}
-              </div>
+              {avatarContent}
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
                 <span className="text-muted-foreground truncate text-xs">
@@ -88,9 +89,7 @@ export function NavUser({
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <div className="h-8 w-8 shrink-0 rounded-lg overflow-hidden">
-                  {avatarContent}
-                </div>
+                {avatarContent}
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
                   <span className="text-muted-foreground truncate text-xs">

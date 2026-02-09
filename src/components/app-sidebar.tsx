@@ -104,7 +104,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             user={{
               name: displayName,
               email: user?.email || "",
-              avatarIcon: getAvatarById(avatarId)?.icon ?? null,
+              avatarSrc: getAvatarById(avatarId)?.src ?? null,
             }}
           />
         ) : (

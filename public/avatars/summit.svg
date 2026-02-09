@@ -1,0 +1,25 @@
+<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="60" cy="60" r="60" fill="#052E16" />
+  <circle cx="60" cy="60" r="56" fill="url(#summit-bg)" />
+  <path d="M60 28L84 82H36L60 28Z" fill="url(#summit-mountain)" />
+  <path
+    d="M60 28L72 52L64 46L60 52L56 46L48 52L60 28Z"
+    fill="#E2E8F0"
+    opacity="0.9"
+  />
+  <path d="M42 76L36 82H52L46 74L42 76Z" fill="#166534" opacity="0.6" />
+  <path d="M78 76L84 82H68L74 74L78 76Z" fill="#166534" opacity="0.6" />
+  <circle cx="78" cy="36" r="8" fill="#FDE68A" opacity="0.3" />
+  <circle cx="78" cy="36" r="5" fill="#FEF9C3" opacity="0.5" />
+  <defs>
+    <radialGradient id="summit-bg" cx="0.5" cy="0.7" r="0.6">
+      <stop offset="0%" stop-color="#14532D" />
+      <stop offset="100%" stop-color="#052E16" />
+    </radialGradient>
+    <linearGradient id="summit-mountain" x1="60" y1="28" x2="60" y2="82">
+      <stop offset="0%" stop-color="#6EE7B7" />
+      <stop offset="40%" stop-color="#34D399" />
+      <stop offset="100%" stop-color="#065F46" />
+    </linearGradient>
+  </defs>
+</svg>

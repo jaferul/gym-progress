@@ -1,0 +1,29 @@
+<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="60" cy="60" r="60" fill="#0C0A09" />
+  <circle cx="60" cy="60" r="56" fill="url(#bolt-bg)" />
+  <path
+    d="M68 26L42 66H56L52 94L78 54H64L68 26Z"
+    fill="url(#bolt-strike)"
+  />
+  <path
+    d="M65 32L44 64H56L52.5 88L73 56H63L65 32Z"
+    fill="#FDE68A"
+    opacity="0.6"
+  />
+  <path
+    d="M62 42L50 62H57L54.5 80L68 58H61L62 42Z"
+    fill="#FFFBEB"
+    opacity="0.4"
+  />
+  <defs>
+    <radialGradient id="bolt-bg" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#1E3A5F" />
+      <stop offset="100%" stop-color="#0C0A09" />
+    </radialGradient>
+    <linearGradient id="bolt-strike" x1="60" y1="26" x2="60" y2="94">
+      <stop offset="0%" stop-color="#60A5FA" />
+      <stop offset="50%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#FBBF24" />
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,66 @@
+<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="60" cy="60" r="60" fill="#18181B" />
+  <circle cx="60" cy="60" r="56" fill="url(#iron-bg)" />
+  <rect
+    x="32"
+    y="56"
+    width="56"
+    height="8"
+    rx="4"
+    fill="url(#iron-bar)"
+  />
+  <circle
+    cx="30"
+    cy="60"
+    r="14"
+    fill="url(#iron-plate-l)"
+    stroke="#52525B"
+    stroke-width="2"
+  />
+  <circle cx="30" cy="60" r="8" fill="#27272A" />
+  <circle cx="30" cy="60" r="3" fill="#3F3F46" />
+  <circle
+    cx="90"
+    cy="60"
+    r="14"
+    fill="url(#iron-plate-r)"
+    stroke="#52525B"
+    stroke-width="2"
+  />
+  <circle cx="90" cy="60" r="8" fill="#27272A" />
+  <circle cx="90" cy="60" r="3" fill="#3F3F46" />
+  <path
+    d="M52 46L60 36L68 46"
+    stroke="#F43F5E"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M55 42L60 34L65 42"
+    stroke="#FB7185"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.5"
+  />
+  <defs>
+    <radialGradient id="iron-bg" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#27272A" />
+      <stop offset="100%" stop-color="#18181B" />
+    </radialGradient>
+    <linearGradient id="iron-bar" x1="32" y1="60" x2="88" y2="60">
+      <stop offset="0%" stop-color="#71717A" />
+      <stop offset="50%" stop-color="#A1A1AA" />
+      <stop offset="100%" stop-color="#71717A" />
+    </linearGradient>
+    <linearGradient id="iron-plate-l" x1="16" y1="46" x2="44" y2="74">
+      <stop offset="0%" stop-color="#F43F5E" />
+      <stop offset="100%" stop-color="#BE123C" />
+    </linearGradient>
+    <linearGradient id="iron-plate-r" x1="76" y1="46" x2="104" y2="74">
+      <stop offset="0%" stop-color="#F43F5E" />
+      <stop offset="100%" stop-color="#BE123C" />
+    </linearGradient>
+  </defs>
+</svg>

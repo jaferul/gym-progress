@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { db } from "@/firebaseConfig";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AVATAR_OPTIONS, getAvatarById } from "@/lib/avatars";
 import { sendEmailVerification, updateProfile } from "@firebase/auth";
 import { createFileRoute, redirect } from "@tanstack/react-router";
@@ -118,15 +119,16 @@ function RouteComponent() {
             <DialogTrigger asChild>
               <button
                 type="button"
-                className="group relative w-20 h-20 aspect-square shrink-0 rounded-full overflow-hidden ring-2 ring-border shadow-lg cursor-pointer transition-all duration-200 hover:ring-primary hover:shadow-xl"
+                className="group relative cursor-pointer"
               >
-                {currentAvatar ? (
-                  currentAvatar.icon
-                ) : (
-                  <div className="w-full h-full bg-muted flex items-center justify-center">
+                <Avatar key={currentAvatar?.src || "none"} className="size-20 ring-2 ring-border shadow-lg transition-all duration-200 group-hover:ring-primary group-hover:shadow-xl">
+                  {currentAvatar && (
+                    <AvatarImage src={currentAvatar.src} alt={currentAvatar.name} />
+                  )}
+                  <AvatarFallback>
                     <UserIcon className="size-8 text-muted-foreground" />
-                  </div>
-                )}
+                  </AvatarFallback>
+                </Avatar>
                 <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition-colors duration-200 rounded-full">
                   <PencilIcon
                     className="size-5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 drop-shadow-md"
@@ -140,6 +142,48 @@ function RouteComponent() {
                 <DialogTitle>Choose your avatar</DialogTitle>
               </DialogHeader>
               <div className="grid grid-cols-3 gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleAvatarSelect("")}
+                  className={`
+                    group/avatar relative flex flex-col items-center gap-1.5 rounded-xl p-2.5
+                    transition-all duration-200 ease-out cursor-pointer
+                    ${
+                      !avatarId
+                        ? "bg-primary/10 ring-2 ring-primary shadow-sm"
+                        : "hover:bg-muted/60 ring-1 ring-transparent hover:ring-border"
+                    }
+                  `}
+                >
+                  <div
+                    className={`
+                      relative transition-transform duration-200 ease-out
+                      ${!avatarId ? "scale-105" : "group-hover/avatar:scale-105"}
+                    `}
+                  >
+                    <Avatar className="size-14">
+                      <AvatarFallback>
+                        <UserIcon className="size-6 text-muted-foreground" />
+                      </AvatarFallback>
+                    </Avatar>
+                    {!avatarId && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-full">
+                        <CheckIcon
+                          className="size-5 text-white drop-shadow-md"
+                          strokeWidth={3}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <span
+                    className={`
+                      text-xs font-medium transition-colors duration-150
+                      ${!avatarId ? "text-primary" : "text-muted-foreground group-hover/avatar:text-foreground"}
+                    `}
+                  >
+                    None
+                  </span>
+                </button>
                 {AVATAR_OPTIONS.map((avatar) => {
                   const isSelected = avatarId === avatar.id;
                   return (
@@ -159,12 +203,13 @@ function RouteComponent() {
                     >
                       <div
                         className={`
-                          relative size-14 rounded-full overflow-hidden
-                          transition-transform duration-200 ease-out
+                          relative transition-transform duration-200 ease-out
                           ${isSelected ? "scale-105" : "group-hover/avatar:scale-105"}
                         `}
                       >
-                        {avatar.icon}
+                        <Avatar className="size-14">
+                          <AvatarImage src={avatar.src} alt={avatar.name} />
+                        </Avatar>
                         {isSelected && (
                           <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-full">
                             <CheckIcon
