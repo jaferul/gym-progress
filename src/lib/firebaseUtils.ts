@@ -1,5 +1,6 @@
 import {
   collection,
+  deleteField,
   doc,
   getDoc,
   getDocs,
@@ -9,7 +10,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
-import type { DayData, Meal, MealInput } from "@/types";
+import type { DayData, Meal, MealInput, MealPlanItem } from "@/types";
 import type { User } from "firebase/auth";
 import { formatDate } from "./utils";
 import { toast } from "sonner";
@@ -29,11 +30,17 @@ export const saveDayData = async (
       throw new Error("User email must be verified to save data.");
 
     const dayDocRef = doc(db, "users", user.uid, "days", dayData.date);
-    await setDoc(
-      dayDocRef,
-      { date: dayData.date, totalCalories: dayData.totalCalories },
-      { merge: true },
-    );
+    const dataToSave: Record<string, any> = {
+      date: dayData.date,
+      totalCalories: dayData.totalCalories,
+    };
+    if (dayData.mealSliders) {
+      dataToSave.mealSliders = dayData.mealSliders;
+    }
+    if (dayData.dayMealPlan) {
+      dataToSave.dayMealPlan = dayData.dayMealPlan;
+    }
+    await setDoc(dayDocRef, dataToSave, { merge: true });
 
     if (withToast) {
       toast("Success", {
@@ -106,8 +113,20 @@ export const getDayData = async (user: User | null, date?: Date) => {
 
     const dayDocRef = doc(db, "users", user.uid, "days", formatDate(date));
     const dayDocSnap = await getDoc(dayDocRef);
+    const data = dayDocSnap.data();
+    if (!data) return null;
 
-    return dayDocSnap.data() as DayData;
+    const dayData: DayData = {
+      date: data.date,
+      totalCalories: data.totalCalories,
+    };
+    if (data.mealSliders) {
+      dayData.mealSliders = data.mealSliders;
+    }
+    if (data.dayMealPlan) {
+      dayData.dayMealPlan = data.dayMealPlan;
+    }
+    return dayData;
   } catch (error) {
     console.error("Error fetching day data:", error);
     return null;
@@ -272,5 +291,62 @@ export const deleteMeal = async (
       success: false,
       message: `Error deleting meal(s): ${error.message}`,
     };
+  }
+};
+
+export const saveMealPlan = async (
+  user: User | null,
+  mealPlan: MealPlanItem[],
+) => {
+  try {
+    if (!user || !user.uid) {
+      throw new Error("User must be logged in to save meal plan.");
+    }
+
+    if (!user.emailVerified) {
+      throw new Error("User email must be verified to save data.");
+    }
+
+    const userDocRef = doc(db, "users", user.uid);
+    await setDoc(userDocRef, { mealPlan }, { merge: true });
+
+    toast.success("Meal plan saved successfully!");
+    return { success: true, message: "Meal plan saved successfully." };
+  } catch (error: any) {
+    console.error("Error saving meal plan:", error);
+    toast.error(`Error saving meal plan: ${error.message}`);
+    return {
+      success: false,
+      message: `Error saving meal plan: ${error.message}`,
+    };
+  }
+};
+
+export const deleteMealTracking = async (user: User | null, date: string) => {
+  try {
+    if (!user || !user.uid) {
+      throw new Error("User must be logged in.");
+    }
+
+    if (!user.emailVerified) {
+      throw new Error("User email must be verified.");
+    }
+
+    const dayDocRef = doc(db, "users", user.uid, "days", date);
+    await setDoc(
+      dayDocRef,
+      {
+        mealSliders: deleteField(),
+        dayMealPlan: deleteField(),
+      },
+      { merge: true },
+    );
+
+    toast.success("Meal tracking deleted.");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error deleting meal tracking:", error);
+    toast.error(`Error deleting meal tracking: ${error.message}`);
+    return { success: false };
   }
 };

@@ -1,6 +1,6 @@
 import { auth, db } from "@/firebaseConfig";
 import { formatDate } from "@/lib/utils";
-import type { DayData } from "@/types";
+import type { DayData, MealPlanItem } from "@/types";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import {
   collection,
@@ -124,6 +124,7 @@ export type AuthContextType = {
   data: DayData[];
   goalCalories?: number;
   todayCalories?: number;
+  mealPlan: MealPlanItem[];
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -135,6 +136,7 @@ export const AuthContext = createContext<AuthContextType>({
   data: [],
   goalCalories: 0,
   todayCalories: 0,
+  mealPlan: [],
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -144,6 +146,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [todayCalories, setTodayCalories] = useState(0);
   const [displayName, setDisplayName] = useState("");
   const [avatarId, setAvatarId] = useState("");
+  const [mealPlan, setMealPlan] = useState<MealPlanItem[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const isAuthenticated = !!user;
 
@@ -176,6 +179,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setGoalCalories(userData?.goalCalories || 0);
         setDisplayName(userData?.displayName || userData?.name || "");
         setAvatarId(userData?.avatarId || "");
+        setMealPlan(userData?.mealPlan || []);
       });
       return () => unsubscribe();
     }
@@ -246,6 +250,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         data,
         goalCalories,
         todayCalories,
+        mealPlan,
       }}
     >
       {children}

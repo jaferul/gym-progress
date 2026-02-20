@@ -117,13 +117,16 @@ function RouteComponent() {
         <div className="mb-8 flex items-center gap-6">
           <Dialog open={avatarDialogOpen} onOpenChange={setAvatarDialogOpen}>
             <DialogTrigger asChild>
-              <button
-                type="button"
-                className="group relative cursor-pointer"
-              >
-                <Avatar key={currentAvatar?.src || "none"} className="size-20 ring-2 ring-border shadow-lg transition-all duration-200 group-hover:ring-primary group-hover:shadow-xl">
+              <button type="button" className="group relative cursor-pointer">
+                <Avatar
+                  key={currentAvatar?.src || "none"}
+                  className="size-20 ring-2 ring-border shadow-lg transition-all duration-200 group-hover:ring-primary group-hover:shadow-xl"
+                >
                   {currentAvatar && (
-                    <AvatarImage src={currentAvatar.src} alt={currentAvatar.name} />
+                    <AvatarImage
+                      src={currentAvatar.src}
+                      alt={currentAvatar.name}
+                    />
                   )}
                   <AvatarFallback>
                     <UserIcon className="size-8 text-muted-foreground" />
