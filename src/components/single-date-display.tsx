@@ -34,8 +34,6 @@ export const SingleDateDisplay = () => {
 
   const { user, mealPlan, goalCalories } = useAuth();
 
-  const hasMealPlan = mealPlan.length > 0;
-
   useEffect(() => {
     (async () => {
       try {
@@ -232,7 +230,7 @@ export const SingleDateDisplay = () => {
                     >
                       Add from custom meals
                     </Button>
-                    {hasMealPlan && !trackingMeals && (
+                    {!trackingMeals && (
                       <Button
                         className="w-full"
                         variant="secondary"
