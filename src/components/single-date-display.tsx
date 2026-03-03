@@ -31,6 +31,10 @@ export const SingleDateDisplay = () => {
   const [newMealTarget, setNewMealTarget] = useState<number | "">("");
   const [editingMeal, setEditingMeal] = useState<string | null>(null);
   const [editingValue, setEditingValue] = useState("");
+  const [savedMealState, setSavedMealState] = useState<{
+    dayMeals: MealPlanItem[];
+    mealSliders: Record<string, number>;
+  } | null>(null);
 
   const { user, mealPlan, goalCalories } = useAuth();
 
@@ -55,6 +59,12 @@ export const SingleDateDisplay = () => {
             sliders[meal.name] = data.mealSliders[meal.name] ?? 0;
           }
           setMealSliders(sliders);
+          setSavedMealState({
+            dayMeals: data.dayMealPlan,
+            mealSliders: sliders,
+          });
+        } else {
+          setSavedMealState(null);
         }
       } catch (error) {
         console.error("Error fetching day data:", error);
@@ -67,6 +77,26 @@ export const SingleDateDisplay = () => {
   const sliderTotal = useMemo(() => {
     return Object.values(mealSliders).reduce((sum, val) => sum + val, 0);
   }, [mealSliders]);
+
+  const mealTrackingChanged = useMemo(() => {
+    if (!savedMealState) return true;
+    const { dayMeals: saved, mealSliders: savedSliders } = savedMealState;
+    if (dayMeals.length !== saved.length) return true;
+    for (let i = 0; i < dayMeals.length; i++) {
+      if (
+        dayMeals[i].name !== saved[i].name ||
+        dayMeals[i].targetCalories !== saved[i].targetCalories
+      )
+        return true;
+    }
+    for (const key of Object.keys(mealSliders)) {
+      if (mealSliders[key] !== savedSliders[key]) return true;
+    }
+    for (const key of Object.keys(savedSliders)) {
+      if (mealSliders[key] !== savedSliders[key]) return true;
+    }
+    return false;
+  }, [dayMeals, mealSliders, savedMealState]);
 
   const handleStartTracking = () => {
     setTrackingMeals(true);
@@ -138,6 +168,10 @@ export const SingleDateDisplay = () => {
       mealSliders,
       dayMealPlan: dayMeals,
     }));
+    setSavedMealState({
+      dayMeals: [...dayMeals],
+      mealSliders: { ...mealSliders },
+    });
   };
 
   const handleAddMealCalories = async (meal: Meal) => {
@@ -411,6 +445,7 @@ export const SingleDateDisplay = () => {
                         <Button
                           className="w-full"
                           onClick={handleSaveMealTracking}
+                          disabled={!mealTrackingChanged}
                         >
                           Save meal tracking
                         </Button>
