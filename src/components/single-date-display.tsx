@@ -16,9 +16,13 @@ import { Spinner } from "./ui/spinner";
 import { CustomMealsDialog } from "./custom-meals-dialog";
 import { Slider } from "./ui/slider";
 import { PlusIcon, Trash2Icon, XIcon } from "lucide-react";
+import { useSearch } from "@tanstack/react-router";
 
 export const SingleDateDisplay = () => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const { date: dateParam } = useSearch({ strict: false });
+  const [date, setDate] = useState<Date | undefined>(
+    dateParam ? new Date(dateParam) : new Date(),
+  );
   const [dayData, setDayData] = useState<DayData | null | undefined>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [customMealsOpen, setCustomMealsOpen] = useState(false);
@@ -203,6 +207,7 @@ export const SingleDateDisplay = () => {
         <Calendar
           mode="single"
           selected={date}
+          defaultMonth={date}
           onSelect={setDate}
           className="rounded-lg border shrink-0"
         />

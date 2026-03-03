@@ -4,6 +4,9 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/__layout/add-data")({
   component: RouteComponent,
+  validateSearch: (search: Record<string, unknown>) => ({
+    date: (search.date as string) || undefined,
+  }),
 });
 
 function RouteComponent() {

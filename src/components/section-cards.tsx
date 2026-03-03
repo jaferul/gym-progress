@@ -3,7 +3,6 @@ import {
   IconTrendingDown,
   IconTrendingUp,
 } from "@tabler/icons-react";
-
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -19,6 +18,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { useAuth } from "./auth-provider";
+import { useNavigate } from "@tanstack/react-router";
 
 function CalorieCard({
   item,
@@ -29,6 +29,8 @@ function CalorieCard({
   isAuthenticated: boolean;
   goal: number;
 }) {
+  const navigate = useNavigate();
+
   const diff = item.totalCalories - goal;
   const isOver = diff > 0;
   const absDiff = Math.abs(diff);
@@ -43,9 +45,10 @@ function CalorieCard({
 
   return (
     <Card
-      className={`relative overflow-hidden rounded-2xl py-0 gap-0
+      className={`relative overflow-hidden rounded-2xl py-0 gap-0 cursor-pointer
         ${!isAuthenticated ? "border-dashed border-amber-300/50 dark:border-amber-500/20" : ""}
       `}
+      onClick={() => navigate({ to: "/add-data", search: { date: item.date } })}
     >
       <div
         className={`absolute inset-x-0 top-0 h-0.5 ${
